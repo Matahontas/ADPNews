@@ -10,6 +10,7 @@
    - Svaki clanak na sebi ima 2 gumba. Jedan za spremanje clanka (klikom na njega clanak ide u 3. ekran) i drugi je za "share" clanka.
    - Klikom na sam clanak otvara se taj cijeli clanak na svojoj web adresi.
    - Clanci se mogu pretrazivati po kljucnim rijecima
+
 **2. ekran(Search tab)**:
    - Ovo je ekran koji dohvaca podatke s "everything" endpointa, ali sam ga napravio ovako jer sam mislio da je prakticnije
    - Ne prikazuje se nista dok se ne upise nesto u search bar, taj tekst sto je u search baru ulazi u "query" filter api linka i klikom na enter dohvaca podatke s tim

@@ -9,7 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
+        // Nice that you're using TabView here
         TabView {
+
+            // Could be better to inject view model here, but this is ok
             HeadlinesTabView()
                 .tabItem { 
                     Label("Headlines", systemImage: "newspaper")

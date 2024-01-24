@@ -8,6 +8,7 @@
 import SwiftUI
 import SafariServices
 
+// great! apple didn't really do much about this SafariView
 struct SafariView: UIViewControllerRepresentable {
     
     let url: URL

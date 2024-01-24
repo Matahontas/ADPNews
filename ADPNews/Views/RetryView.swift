@@ -10,7 +10,12 @@ import SwiftUI
 struct RetryView: View {
     
     let text: String
+
+    // this is absolutely fine, but common practice is to do it like this:
+    // => let retryAction: (Void) -> ()
+
     let retryAction: () -> ()
+    
     var body: some View {
         VStack(spacing: 8) {
             Text(text)

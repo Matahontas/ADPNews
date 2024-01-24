@@ -21,6 +21,9 @@ enum Category: String, CaseIterable {
             return "Top headlines"
         }
         return rawValue.capitalized
+
+        // muche cleaner:
+        // => return self == .general ? "Top headlines" : rawValue.capitalized
     }
     
 }

@@ -12,8 +12,14 @@ struct ArticleRowView: View {
     @EnvironmentObject var articleBookmarkVM: ArticleBookmarkViewModel
     
     let article: Article
+
+    // would be better to extract View components into separate Views
+    // that way our body is much cleaner and easier to understand for someone who's looking at it for the first time (like me)
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
+
+            // this can be articleImage
+            // => var articleImage: some View { ... }
             AsyncImage(url: article.imageURL) { phase in
                 switch phase {
                 case .empty:
@@ -22,6 +28,12 @@ struct ArticleRowView: View {
                         ProgressView()
                         Spacer()
                     }
+
+                    // another way for centering content would be like this:
+                    // => ProgressView()
+                    //      .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
+                    // this is much cleaner than wrapping a single component into a VStack or HStack just to center it
+
                 case .success(let image):
                     image
                         .resizable()
@@ -41,6 +53,8 @@ struct ArticleRowView: View {
             .background(Color.gray.opacity(0.3))
             .clipped()
             
+            // this can be articleDetails
+            // => var articleDetails: some View { ... }
             VStack(alignment: .leading, spacing: 8) {
                 Text(article.title)
                     .font(.headline)
@@ -50,6 +64,8 @@ struct ArticleRowView: View {
                     .font(.subheadline)
                     .lineLimit(2)
                 
+                // this can be articleCaption
+                // => var articleCaption: some View { ... }
                 HStack {
                     Text(article.captionText)
                         .lineLimit(1)
@@ -58,12 +74,17 @@ struct ArticleRowView: View {
                     
                     Spacer()
                     
+                    // this can be bookmarkButton
+                    // => var bookmarkButton: some View { ... }
                     Button{
                         toggleBookmark(for: article)
                     } label: {
                         Image(systemName: articleBookmarkVM.isBookmarked(for: article) ? "bookmark.fill" : "bookmark")
                     }
                     .buttonStyle(.bordered)
+
+                    // this can be shareButton
+                    // => var shareButton: some View { ... }
                     Button{
                         presentShareSheet(url: article.articleURL)
                     } label: {

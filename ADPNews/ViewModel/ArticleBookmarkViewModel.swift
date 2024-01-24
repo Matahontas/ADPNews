@@ -11,9 +11,11 @@ import SwiftUI
 class ArticleBookmarkViewModel: ObservableObject {
     
     @Published private(set) var bookmarks: [Article] = []
+    
+    // Use native UserDefaults
     private let bookmarkStore = PlistDataStore<[Article]>(filename: "bookmarks")
-    
-    
+
+    // Never should VM be a singleton
     static let shared = ArticleBookmarkViewModel()
     
     private init() {
@@ -48,6 +50,8 @@ class ArticleBookmarkViewModel: ObservableObject {
     }
     
     private func bookmarkUpdated() {
+        // I understand this, but naming should never be like this: variable1, variable2...
+        // => let updatedBookmarks = self.bookmarks
         let bookmarks2 = self.bookmarks
         Task {
             await bookmarkStore.save(bookmarks2)

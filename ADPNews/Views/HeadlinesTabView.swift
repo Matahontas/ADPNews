@@ -9,17 +9,23 @@ import SwiftUI
 
 struct HeadlinesTabView: View {
     
+    // VM is StateObject which is good, here it's not a singleton - why?
+    // It'd be better to inject VM into View, but this is ok
     @StateObject var articleNewsVM = ArticleNewsViewModel()
+    
+    // randomly using private
     @State private var isSortedAscending: Bool = false
     @State var searchText: String = ""
     
     var body: some View {
+
+        // Kudos for using NavigationStack
         NavigationStack {
             ArticleListView(articles: sortedArticles)
                 .overlay(overlayView)
                 .task(id: articleNewsVM.fetchTaskToken.category, loadTaskCategory)
-                .refreshable(){
-                    refreshTask()
+                .refreshable() {
+                    refreshTask() // nice
                 }
                 .navigationTitle(articleNewsVM.fetchTaskToken.category.text)
                 .toolbar() {
@@ -36,9 +42,22 @@ struct HeadlinesTabView: View {
         .searchable(text: $searchText)
     }
     
+    // Nice for using ViewBuilder here, but do you know what does it do and when do we use it?
     @ViewBuilder
     private var overlayView: some View {
-        
+
+        // => much better:
+        //    switch articleNewsVM.phase {
+        //    case .empty:
+        //        ProgressView()
+        //    case .success(let articles) where articles.isEmpty:
+        //        EmptyPlaceholderView(text: "No Articles", image: nil)
+        //    case .failure(let error):
+        //        RetryView(text: error.localizedDescription, retryAction: refreshTask)
+        //    default:
+        //        EmptyView()
+        //    }
+
         switch articleNewsVM.phase {
         case .empty: ProgressView()
         case .success(let articles) where articles.isEmpty: EmptyPlaceholderView(text: "No Articles", image: nil)
@@ -55,6 +74,7 @@ struct HeadlinesTabView: View {
         }
     }
     
+    // What is Sendable, why do we use it?
     @Sendable
     private func loadTask() async {
        await articleNewsVM.loadArticles()
@@ -73,6 +93,7 @@ struct HeadlinesTabView: View {
         articleNewsVM.fetchTaskToken = FetchTaskToken(category: articleNewsVM.fetchTaskToken.category, token: Date())
     }
     
+    // Nicee!!
     private var menu: some View {
         Menu {
             Picker("Category", selection: $articleNewsVM.fetchTaskToken.category) {
@@ -88,10 +109,22 @@ struct HeadlinesTabView: View {
     
     private var sortedArticles: [Article] {
         if case let .success(articles) = articleNewsVM.phase {
+            
+            // if searchText is '  ' it's still technically empty, but here it will not be treated as empty
+            // in this situations it's best to use .trimmingCharacters(in: .whitespacesAndNewlines)
+            // => if searchText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty { ... }
+
             if searchText.isEmpty {
                 return isSortedAscending ? articles.sorted { $0.publishedAt < $1.publishedAt } : articles.sorted { $0.publishedAt > $1.publishedAt }
             }
             else {
+                
+                // here you completely repeat the logic for sorting, so maybe you can extract it out
+                // this enables you to make changes only in one place instead of 2 or more
+                // => let sorted = isSortedAscending ? articles.sorted { $0.publishedAt < $1.publishedAt } : articles.sorted { $0.publishedAt > $1.publishedAt }
+                // => if searchText.isEmpty { return sorted } else { return sorted.filter { ... } }
+                // => or even better: return searchText.isEmpty ? sorted : sorted.filter { ... }
+
                 return isSortedAscending ? articles.sorted { $0.publishedAt < $1.publishedAt } : articles.sorted { $0.publishedAt > $1.publishedAt }
                     .filter {
                         $0.title.lowercased().contains(searchText.lowercased()) ||

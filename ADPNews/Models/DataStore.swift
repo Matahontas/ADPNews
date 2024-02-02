@@ -31,6 +31,10 @@ actor PlistDataStore<T: Codable>: DataStore where T: Equatable {
     }
     
     func save(_ current: T) {
+        // when performing early escape from a method (like you did here) we prefer to do it like this:
+        // => guard let saved = self.saved, saved == current else { return }
+        // you can read it like this: We guard our method from continuing if saved is nil or different than current
+
         if let saved = self.saved, saved == current {
             return
         }

@@ -8,12 +8,19 @@
 import SwiftUI
 
 struct BookmarkTabView: View {
+
+    // why EnvironmentObject?
     @EnvironmentObject var articleBookmarkVM: ArticleBookmarkViewModel
-    @State var searchText: String = ""
     
+    @State var searchText: String = ""
+
+    // very nice UI, clean and simple
     var body: some View {
         let articles = self.articles
         
+        // I see that you're always putting ArticleListView inside NavigationStack
+        // maybe it'd be better to put this NavigationStack inside the ArticleListView itself?
+        // that way you wouldn't have to do it every time you want to use ArticleListView
         NavigationStack {
             ArticleListView(articles: articles)
                 .overlay(overlayView(isEmpty: articles.isEmpty))

@@ -15,6 +15,10 @@ struct EmptyPlaceholderView: View {
     var body: some View {
         VStack(spacing: 8) {
             Spacer()
+
+            // new syntax allows you to just type this
+            // => if let image { ... }
+            // it automatically assumes that you want to safely unwrap self.image
             if let image = self.image {
                 image
                     .imageScale(.large)

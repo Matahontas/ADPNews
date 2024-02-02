@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+// great!
 enum DataFetchPhase<T> {
     case empty
     case success(T)

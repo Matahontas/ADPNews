@@ -12,7 +12,7 @@ struct HeadlinesAPI {
     static let shared = HeadlinesAPI()
     private init() {}
     
-    private let apiKey = "3eef49c01a8941b3b737f12ac5b3a075"
+    private let apiKey = ""
     private let session = URLSession.shared
     private let jsonDecoder: JSONDecoder = {
         let decoder = JSONDecoder()
